@@ -32,17 +32,24 @@ export async function createChatDocument(payload: ChatMessageI, uniqueId = ID.un
     uniqueId,
     {
       ...payload,
+      created_at: new Date().toISOString(),
     },
     [Permission.write(Role.user(payload.sender_id)), Permission.read(Role.any())]
   );
 }
 
 export async function updateChatDocument(payload: Partial<ChatMessageI>, uniqueId: string) {
+  const updatedPayload = {
+    ...payload,
+    updated_at: new Date().toISOString(), // Set updated_at as ISO string
+  };
+
   return await database.updateDocument<ChatMessage>(
     Server.dbId,
     Server.messagesCollectionId,
     uniqueId,
-    payload
+    updatedPayload,
+    [Permission.write(Role.user(payload.sender_id as string)), Permission.read(Role.any())]
   );
 }
 interface VideoChat {

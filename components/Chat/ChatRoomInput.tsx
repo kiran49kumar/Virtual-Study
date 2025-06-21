@@ -40,6 +40,8 @@ export default function ChatRoomInput(props: ChatRoomInputProps) {
         message_type: messageType, // Update the message type
         sender_id,
         status: "pending",
+        created_at: new Date().toISOString(), // Set created_at timestamp
+        updated_at: new Date().toISOString(),
       };
 
       if (file) {
@@ -149,7 +151,7 @@ const uploadAndCreateChatDocument = async (
     // Determine the message type based on the file extension
     payload["message_type"] = getFileType(file);
     // Upload the file to the bucket and get the URL
-    const fileObj = await uploadFileToBucket(sender_id, file, "chat-files-bucket", (progress) => {
+    const fileObj = await uploadFileToBucket(sender_id, file, "67324283000f7be2437b", (progress) => {
       mutateProgress(progress);
     });
     payload["content"] = JSON.stringify({
@@ -158,6 +160,9 @@ const uploadAndCreateChatDocument = async (
       message,
     });
     payload["status"] = "sent";
+    payload["created_at"] = new Date().toISOString(); // Add created_at when file is uploaded
+    payload["updated_at"] = new Date().toISOString();
+    
     delete payload["$id"];
     // Create the chat document
     await createChatDocument(payload, uniqueId);

@@ -7,12 +7,16 @@ import { useMemo } from "react";
 import useSWR from "swr";
 import Header from "../Header";
 import StudyRooms from "./StudyRooms";
+import { useSearchParams } from 'next/navigation';
 
-const StudyRoomPage = ({ searchParams }: { searchParams: any }) => {
+const StudyRoomPage = () => {
   const { currentUser } = useAuth();
+  const searchParams = useSearchParams(); 
+  const query = searchParams?.get('q') || "";
+
   const { data, error, isLoading } = useSWR(
-    currentUser?.$id ? `all-study-rooms?q=${searchParams?.q}` : null,
-    async () => await getAllStudyRooms(currentUser?.$id, searchParams?.q),
+    currentUser?.$id ? `all-study-rooms?q=${query}` : null,
+    async () => await getAllStudyRooms(currentUser?.$id, query),
     {
       revalidateOnFocus: false,
     }

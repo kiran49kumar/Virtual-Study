@@ -4,7 +4,7 @@ export interface StudyRoomI {
   name: string;
   image_url?: string;
   subject: string;
-  status?: "public" | "private";
+  status?: ("public" | "private")[];
 }
 
 export interface StudyRoomModel extends Models.Document, StudyRoomI {
